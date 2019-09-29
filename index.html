@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+
+<head>
+    
+
+    <title></title>
+
+    <meta charset="utf-8">
+
+
+    <style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            --event-section-width: 300px;
+        }
+
+        div.month {
+            padding: 30px;
+            width: calc(100% - var(--event-section-width));
+            background-color: lightpink;
+        }
+
+        div.day-head, 
+        div.day-pad, 
+        div.day-real {
+            margin: 2px;
+            background-color: #ddd;
+            display: inline-block;
+            height: 70px;
+            text-align: center;
+            width: 90px;
+        }
+
+        div.day-head {
+            height: 30px;
+        }
+
+        div.day-pad {
+            opacity: 0;
+        }
+
+        div.event-cont {
+            background-color: #eee;
+            box-shadow: 0 0 10px 0px #000;
+            font-size: 13px;
+            height: 100%;
+            overflow-y: auto;
+            padding: 20px;
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: var(--event-section-width);
+        }
+
+        span.num-event {
+            background-color: beige;
+            font-family: arial;
+            font-size: 12px;
+            display: block;
+        }
+
+        div.event-details {
+            margin: 0 0 5px 0;
+        }
+
+    </style>
+
+
+</head>
+
+
+
+
+
+<body>
+    
+
+    <div class="month"></div>
+
+
+    <div class="event-cont"></div>
+
+
+</body>
+
+
+
+
+
+<script>
+    
+    {
+
+        'use strict';
+
+
+        let EVENTS = [];
+
+
+
+
+        makeCalendar();
+
+
+
+
+        // Create a calendar for current month, with a box for each day and
+        // a button in each box for creating events.
+        function makeCalendar() {
+            let numDays = getNumDays();
+            if (numDays!=-1) {
+
+                // createDayHeads();
+
+                // Add invisible boxes before day 1, to align properly to show
+                // which day of the week.
+                addDayBoxPadding();
+    
+                // Add visible/real day boxes.
+                for (let c=0; c<numDays; ++c) {
+                    createDayBox(c, "real");
+                }
+
+                addCreateEventButtons();
+
+            }
+        }
+
+
+
+
+        // Get number of days in current month. (Leap year check included.)
+        function getNumDays() {
+            let d = new Date;
+            let m = d.getMonth();
+            return (m==0 || m==2 || m==4 || m==6 || m==7 || m==9 || m==11) 
+                ? 31 
+                : (m==3 || m==5 || m==8 || m==10) 
+                    ? 30 
+                    : m==1 
+                        ? (d.getFullYear()%4)==0
+                            ? 29
+                            : 28
+                                : -1;
+        }
+
+
+
+
+        // Create a box for each day of current month.
+        // Create invisible box if used for padding to show which day of
+        // week. Otherwise, create visible boxes and show date, create-event
+        // button, and event count in them.
+        function createDayBox(index, type) {
+            let calendar = document.querySelector('div.month');
+            let dayBox = document.createElement('div');
+
+            // Set which type of box.
+            dayBox.classList.add(
+                type=="real" 
+                    ? 'day-real' 
+                    : type=="pad"
+                        ? 'day-pad'
+                        : type=="head"
+                            ? 'day-head'
+                            : ''
+            );
+
+            // Show date and event count if visible/real day box.
+            if (type=="real") {
+                dayBox.innerText = index+1;
+                dayBox = createEventCountCont(dayBox, index);
+            }
+
+            calendar.appendChild(dayBox);
+        }
+
+
+
+
+        // 
+        function getFirstDayIndex() {
+            let date = new Date();
+            let todayIndex = date.getDay();
+            let todayDate = date.getDate();
+            let IndexOffset = todayIndex - (todayDate%7);
+            return IndexOffset+1 ;
+        }
+
+
+
+
+        // Add invisible day boxes before day 1 (if necessary) to show
+        // which day of week.
+        function addDayBoxPadding() {
+            let numPadBoxes = getFirstDayIndex();
+            for (let c=0; c<numPadBoxes; ++c) {
+                createDayBox(c, "pad");
+            }
+        }
+
+
+
+
+        // Add a create-event button to each day box.
+        // Add functions to the button for:
+        //   - creating event for clicked day
+        //   - updating event count in day box
+        //   - showing all events in a sorted order on side panel
+        function addCreateEventButtons() {
+            let calendar = document.querySelector('div.month');
+            let dayBoxes = calendar.querySelectorAll('div.day-real');
+
+            for (let c=0; c<dayBoxes.length; ++c) {
+                let button = document.createElement('button');
+                button.innerText = 'Create';
+
+                // When a create-event button is clicked, take input from
+                // user, create event using it, and show all sorted event
+                // details in side panel.
+                button.addEventListener('click', function(e) {
+                    createEvent(e.target, c);
+                    updateNumEvents(e.target, c);
+                    sortEventDetails();
+                    clearEventDetails();
+                    addEventDetails();
+                });
+
+                dayBoxes[c].appendChild(button);
+            }
+        }
+
+
+
+
+        // Create an event and store in variable (to show in side panel).
+        function createEvent(button, index) {
+            let input = prompt();
+            if (input) {
+                let evDetails = createEventDetails(input, index);
+                EVENTS.push(evDetails);
+            }
+        }
+
+
+
+
+        // Update the event count in clicked day's box.
+        function updateNumEvents(button, index) {
+            let dayBox    = button.parentNode;
+            let countCont = dayBox.querySelector('span.num');
+            let textCont  = dayBox.querySelector('span.text');
+            countCont.innerText = parseInt(countCont.innerText) + 1;
+            textCont.innerText += parseInt(countCont.innerText)==2 ? 's' : '';
+        }
+
+
+
+
+        // Create area for showing event counts in day boxes.
+        function createEventCountCont(dayBox, index) {
+            let countCont = document.createElement('span');
+            countCont.classList.add('num-event');
+
+            // Initially create event count showing "0 event".
+            let numCont = document.createElement('span');
+            numCont.classList.add('num');
+            numCont.innerText = 0;
+            let textCont = document.createElement('span');
+            textCont.classList.add('text');
+            textCont.innerText = ' event';
+            
+            countCont.appendChild(numCont);
+            countCont.appendChild(textCont);
+
+            dayBox.appendChild(countCont);
+            
+            return dayBox;
+        }
+
+
+
+
+        // Create event details (to be shown in side panel) in specific
+        // format:
+        //   [DD].[MM]#[EVENT_DETAILS]
+        // The "#" will be used to split date and details.
+        function createEventDetails(input, index) {
+            return padInt((index+1), 2) 
+                + '.' + padInt((new Date().getMonth()+1), 2) 
+                + '#' + input
+        }
+
+
+
+
+        // Clear side panel (to show resorted event details).
+        function clearEventDetails() {
+            document.querySelector('div.event-cont').innerHTML = "";
+        }
+
+
+
+
+        // Add all sorted event details in side panel.
+        function addEventDetails(content) {
+            let sidePanel = document.querySelector('div.event-cont');
+            for (let c=0; c<EVENTS.length; ++c) {
+                let eventCont = document.createElement('div');
+                eventCont.classList.add('event-details');
+
+                let dateCont = document.createElement('b');
+                let dateText = EVENTS[c].split('#')[0];
+                dateCont.innerText = dateText;
+
+                let detailText = EVENTS[c].split("#").splice(1, EVENTS[c].length).join("#");
+                let detailCont = document.createElement('span');
+                detailCont.innerText = ' ' + detailText;
+
+                eventCont.appendChild(dateCont);
+                eventCont.appendChild(detailCont);
+
+                sidePanel.appendChild(eventCont);
+            }
+        }
+
+
+
+
+        // Put a zero (0) in front of single-digit dates and months.
+        function padInt(content, length) {
+
+            // Turn number to string.
+            content += '';
+
+            // Add zero (0) in front of number until desired length is
+            // reached.
+            let diff = length - content.length;
+            for (let c=0; c<diff; ++c) {
+                content = '0' + content;
+            }
+
+            return content;
+        }
+
+
+
+
+        // Sort stored event details based on date.
+        function sortEventDetails() {
+            EVENTS = EVENTS.sort();
+        }
+
+    }
+
+</script>
+
+
+</html>
