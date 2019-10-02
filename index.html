@@ -121,7 +121,8 @@
             let numDays = getNumDays();
             if (numDays!=-1) {
 
-                // createDayHeads();
+                // Create headings above, showing day names: Sun, Mon, ... etc.
+                createDayHeads();
 
                 // Add invisible boxes before day 1, to align properly to show
                 // which day of the week.
@@ -158,6 +159,16 @@
 
 
 
+        // Show the names of the 7 days of a week.
+        function createDayHeads() {
+            for (let c=0; c<7; ++c) {
+                createDayBox(c, "head");
+            }
+        }
+
+
+
+
         // Create a box for each day of current month.
         // Create invisible box if used for padding to show which day of
         // week. Otherwise, create visible boxes and show date, create-event
@@ -181,6 +192,25 @@
             if (type=="real") {
                 dayBox.innerText = index+1;
                 dayBox = createEventCountCont(dayBox, index);
+            }
+
+            // Show the names of the days of a week, starting from Sunday.
+            else if (type=="head") {
+                dayBox.innerText = index==0
+                    ? "Sun"
+                    : index==1
+                        ? "Mon"
+                        : index==2
+                            ? "Tue"
+                            : index==3
+                                ? "Wed"
+                                : index==4
+                                    ? "Thu"
+                                    : index==5
+                                        ? "Fri"
+                                        : index==6
+                                            ? "Sat"
+                                            : "";
             }
 
             calendar.appendChild(dayBox);
