@@ -11,9 +11,13 @@ All added events are displayed
 in a sorted manner (date-wise first and then alphabetically) 
 on the side panel. 
 
-_**Warning:**
-Keep in mind that the events are added temporarily, as of now. 
-They are stored in JS, so a simple reload will reset the page._
+### Warning
+
+- The events are added only temporarily.
+They are stored in JS, so a simple reload will reset the page.
+
+- Not responsive.
+Needs to be seen on a tablet or desktop for best results.
 
 ### Why Use It
 
