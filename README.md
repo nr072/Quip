@@ -35,6 +35,20 @@ This is meant to be used as a quick-but-handy tool for rough planning.
 
 ### How to Use It
 
+#### Preparing to use:
+
+- Clone or download the repository.
+
+- `cd` to it.
+
+- Serve using Python: `python3 -m http.server 1234`.
+
+- Open in browser: `127.0.0.1:1234`.
+
+You can use any port you want, instead of the `1234`.
+
+#### Using the site:
+
 - Click the button on a day to add an event to that day.
 
 - The counter of that day will increase, 
