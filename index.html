@@ -22,37 +22,51 @@
         }
 
         body {
-            --event-section-width: 300px;
+            --event-section-width: 350px;
+            --month-cont-min-width: 775px;
+            background-color: rgba(167, 191, 174, 1);
+            font-family: serif;
+        }
+
+        div.month-cont {
+            margin-right: var(--event-section-width);
+            width: calc(100% - var(--event-section-width));
         }
 
         div.month {
+            margin: auto;
             padding: 30px;
-            width: calc(100% - var(--event-section-width));
-            background-color: lightpink;
+            width: var(--month-cont-min-width);
         }
 
         div.day-head, 
         div.day-pad, 
         div.day-real {
-            margin: 2px;
-            background-color: #ddd;
+            margin: 6px;
+            border-radius: 2px;
             display: inline-block;
-            height: 70px;
+            padding: 10px;
             text-align: center;
             width: 90px;
         }
 
         div.day-head {
-            height: 30px;
+            height: 50px;
+            color: rgba(70, 70, 70, 1);
         }
 
         div.day-pad {
             opacity: 0;
         }
 
+        div.day-real {
+            background-color: rgba(220, 220, 220, 1);
+            box-shadow: 2px 2px 5px 0px rgba(57, 81, 64, 1);
+        }
+
         div.event-cont {
-            background-color: #eee;
-            box-shadow: 0 0 10px 0px #000;
+            background-color: rgba(240, 240, 240, 1);
+            box-shadow: 0 0 7px 0px rgba(0, 0, 0, 1);
             font-size: 13px;
             height: 100%;
             overflow-y: auto;
@@ -64,14 +78,33 @@
         }
 
         span.num-event {
-            background-color: beige;
-            font-family: arial;
-            font-size: 12px;
+            background-color: rgba(242, 242, 219, 1);
             display: block;
+            font-family: arial;
+            padding: 2px  0;
         }
 
         div.event-details {
             margin: 0 0 5px 0;
+        }
+
+        span.num-event,
+        button {
+            font-size: 12px;
+            margin-top: 9px;
+        }
+
+        button {
+            background-color: transparent;
+            border: 1px solid rgba(128, 128, 128, 1);
+            padding: 1px 9px;
+        }
+
+        button:hover {
+            background-color: rgba(255, 255, 255, 1);
+            border-color: rgba(200, 200, 200, 1);
+            color: rgba(0, 0, 0, 1);
+            cursor: pointer;
         }
 
     </style>
@@ -86,7 +119,9 @@
 <body>
     
 
-    <div class="month"></div>
+    <div class="month-cont">
+        <div class="month"></div>
+    </div>
 
 
     <div class="event-cont"></div>
@@ -106,6 +141,8 @@
 
 
         let EVENTS = [];
+
+        let calendar = document.querySelector('div.month');
 
 
 
@@ -174,7 +211,6 @@
         // week. Otherwise, create visible boxes and show date, create-event
         // button, and event count in them.
         function createDayBox(index, type) {
-            let calendar = document.querySelector('div.month');
             let dayBox = document.createElement('div');
 
             // Set which type of box.
@@ -249,7 +285,6 @@
         //   - updating event count in day box
         //   - showing all events in a sorted order on side panel
         function addCreateEventButtons() {
-            let calendar = document.querySelector('div.month');
             let dayBoxes = calendar.querySelectorAll('div.day-real');
 
             for (let c=0; c<dayBoxes.length; ++c) {
