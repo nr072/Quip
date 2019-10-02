@@ -41,7 +41,10 @@ This is meant to be used as a quick-but-handy tool for rough planning.
 
 - `cd` to it.
 
-- Serve using Python: `python3 -m http.server 1234`.
+- Serve using Python: 
+`python3 -m http.server 1234` 
+or 
+`python2 -m SimpleHTTPServer 1234`.
 
 - Open in browser: `127.0.0.1:1234`.
 
