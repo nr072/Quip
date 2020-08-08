@@ -463,7 +463,7 @@
    * @returns     DOM element
    *
    */
-  const el = function (opt) {
+  const el = (opt) => {
     const el = document.createElement((opt && opt.name) ? opt.name : "div");
     if (opt && opt.id) {
       el.id = opt.id;
@@ -480,7 +480,7 @@
       el.title = opt.title;
     }
     return el;
-  }
+  };
 
 
 
@@ -506,7 +506,7 @@
    * @param  day_box  DOM element
    *
    */
-  const increase_num_events = function (day_box) {
+  const increase_num_events = (day_box) => {
 
     const num_events_el = of_q(".num-events", day_box);
 
@@ -521,7 +521,7 @@
       num_events_text.innerText = "events";
     }
 
-  }
+  };
 
 
 
@@ -530,7 +530,7 @@
    * entries again.
    *
    */
-  const fill_sidebar = function () {
+  const fill_sidebar = () => {
     
     // Clear all event entries from the sidebar.
     const sidebar_body = of_q(".sidebar-body");
@@ -561,7 +561,7 @@
 
     });
 
-  }
+  };
 
 
 
@@ -577,7 +577,7 @@
    * @param  day_box   DOM element
    *
    */
-  const create_event = function (date, ev_title, day_box) {
+  const create_event = (date, ev_title, day_box) => {
 
     // Construct date in 'dd.mm' format.
     const d = date < 10 ? ("0" + date) : date;
@@ -593,7 +593,7 @@
     // Repopulate the sidebar with all the event entries.
     fill_sidebar();
 
-  }
+  };
 
 
 
@@ -611,7 +611,7 @@
    * @returns       DOM element
    *
    */
-  const make_day = function (opt) {
+  const make_day = (opt) => {
 
     // Create and return an empty day box.
     if (opt && opt.empty) {
@@ -676,7 +676,7 @@
 
     return day_box;
 
-  }
+  };
 
 
 
@@ -686,7 +686,7 @@
    * All boxes preceding day 1 are considered 'empty' and are styled
    * accordingly.
    */
-  const make_month = function () {
+  const make_month = () => {
 
     const d = new Date();
     const year = d.getFullYear();
@@ -731,7 +731,7 @@
 
     }
 
-  }
+  };
 
 
 
@@ -746,7 +746,7 @@
    * @param  message  String
    *
    */
-  const set_popup_text = function (message) {
+  const set_popup_text = (message) => {
 
     let title, subtitle, body;
     if (message === "coming-soon") {
@@ -774,7 +774,7 @@
       p_body.innerText = body;
     }
 
-  }
+  };
 
 
 
@@ -787,7 +787,7 @@
    * @param  show  Boolean
    *
    */
-  const toggle_popup = function (show) {
+  const toggle_popup = (show) => {
 
     const popup = of_id("popup");
 
@@ -812,7 +812,7 @@
 
     }
 
-  }
+  };
 
 
 
@@ -822,7 +822,7 @@
    * @param  message  String
    *
    */
-  const pop_up = function (message) {
+  const pop_up = (message) => {
 
     // Stop page scrolling beneath the pop-up.
     document.body.style.overflow = "hidden";
@@ -841,7 +841,7 @@
     // Reveal the pop-up.
     toggle_popup(true);
 
-  }
+  };
 
 
 
@@ -860,7 +860,7 @@
    * to target elements.
    *
    */
-  const add_event_listeners = function () {
+  const add_event_listeners = () => {
     
     // Close the pop-up when its cross icon is clicked.
     const popup_cross = of_q("#popup .cross-icon");
@@ -894,7 +894,7 @@
       }
     });
 
-  }
+  };
 
 
 
