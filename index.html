@@ -79,6 +79,10 @@
       text-align: center;
     }
 
+    .day.today {
+      background: rgba(0, 0, 0, .05);
+    }
+
     .day-empty {
       border-color: transparent;
     }
@@ -352,7 +356,7 @@
     }
     if (opt && opt.classes) {
       opt.classes.forEach(class_name => {
-        el.classList.add(class_name);
+        class_name && el.classList.add(class_name);
       });
     }
     if (opt && opt.text) {
@@ -484,7 +488,13 @@
       return el({ classes: ["day", "day-empty"] });
     }
 
-    const day_box = el({ classes: ["day"] });
+    // Add an additional class to mark today's day box.
+    const day_box = el({
+      classes: [
+        "day",
+        (opt && opt.today ? "today" : "")
+      ]
+    });
 
     // Add the part to show the number of existing events for this date.
     const num_events = el({
@@ -575,11 +585,16 @@
         day_box = make_day({ empty: true });
       }
 
-      // Create an actual day box (with content).
+      // Create an actual day box (with content). Mark today's day box.
       else {
-        day_box = make_day({
-          date: (i - first_day)
-        });
+        if ((i - first_day) == date) {
+          day_box = make_day({
+            date: (i - first_day),
+            today: true
+          });
+        } else {
+          day_box = make_day({ date: (i - first_day) });
+        }
       }
 
       calendar.appendChild(day_box);
