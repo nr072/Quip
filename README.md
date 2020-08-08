@@ -16,8 +16,8 @@ Future plans include
 using either session storage and/or providing a feature to export data.
 
 _**Note:**
-The interface is not_ very _mobile-friendly,
-but if behaves sufficiently well for screen width above 600px._
+The interface is not very mobile-friendly,
+but if behaves sufficiently well for screen widths above 600px._
 
 ### Warning
 
@@ -61,16 +61,14 @@ to use Quip.
 #### Serving the page
 
 Using Python 2,
-you can run the following command in the Command Prompt or the terminal
-and then access the page at 127.0.0.1:8000 in your browser:
+you can run the following command in the Command Prompt or a terminal
+and then access the page at `http://127.0.0.1:8000` in your browser:
 
 ```
 python2 -m SimpleHTTPServer
 ```
 
-Using Python 3,
-you can run the following command in the Command Prompt or the terminal
-and then access the page at 127.0.0.1:8000 in your browser:
+Using Python 3:
 
 ```
 python3 -m http.server
@@ -78,13 +76,11 @@ python3 -m http.server
 
 #### Using Quip
 
-1. Click on the 'Add' button for a date.
+1. Click on the 'Add' button for a date.  
+A prompt will appear, requiring you to write an event title.
 
-  A prompt will appear, requiring you to write an event title.
-
-2. Write an event title, and press the enter key or click on 'Okay'.
-
-  The event title will show up in the sidebar (on the right),
+2. Write an event title, and press the enter key or click on 'Okay'.  
+The event title will show up in the sidebar (on the right),
 preceded by the date.
 
 All titles in the sidebar are automatically sorted,
@@ -129,18 +125,18 @@ Long words are automatically broken, but _without_ any hyphen/dash character.
 
 ### Future Plan
 
-- Make data more persistent:
+- Make data more persistent
   - Use session storage
   - Provide data export feature
-
 - Show only the events of a specific date upon user interaction
 
 ### Miscellaneous
 
 #### Is there a plan to make it less temporary?
 
-Yes, the risk of an accidental F5-press is very obvious.
-To solve this, session storage will most likely be used.
+Yes.
+The risk of an accidental reload is dangerously obvious.
+Session storage will most likely be used to solve this.
 Plus, a feature to export data to file is planned.
 
 A database will probably never be integrated.
