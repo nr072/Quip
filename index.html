@@ -484,6 +484,22 @@
 
 
 
+  // Shorthands for a few frequently-used functions.
+
+  const of_id = (id) => {
+    return document.getElementById(id);
+  };
+
+  const of_q = (selector, element) => {
+    if (element) {
+      return element.querySelector(selector);
+    } else {
+      return document.querySelector(selector);
+    }
+  };
+
+
+
   /*
    * Increase the number of events displayed in a day box by 1.
    *
@@ -492,7 +508,7 @@
    */
   const increase_num_events = function (day_box) {
 
-    const num_events_el = day_box.querySelector(".num-events");
+    const num_events_el = of_q(".num-events", day_box);
 
     // Increase number of events by 1.
     let num_events = parseInt(num_events_el.innerText);
@@ -501,7 +517,7 @@
     // If updated number is more than 1, show 'events' instead of 'event' in
     // text.
     if (num_events > 1) {
-      const num_events_text = day_box.querySelector(".num-events-text");
+      const num_events_text = of_q(".num-events-text", day_box);
       num_events_text.innerText = "events";
     }
 
@@ -517,7 +533,7 @@
   const fill_sidebar = function () {
     
     // Clear all event entries from the sidebar.
-    const sidebar_body = document.querySelector(".sidebar-body");
+    const sidebar_body = of_q(".sidebar-body");
     sidebar_body.innerHTML = "";
 
     const events = quip.get_events();
@@ -691,7 +707,7 @@
     // empty/invisible.
     for (let i = 1; i < (num_boxes + 1); ++i) {
 
-      const calendar = document.getElementById("calendar");
+      const calendar = of_id("calendar");
       let day_box;
 
       // Create an empty box.
@@ -746,15 +762,15 @@
 
     // Show appropriate messages in the pop-up.
     if (title) {
-      const p_title = document.querySelector(".popup-header .title");
+      const p_title = of_q(".popup-header .title");
       p_title.innerText = title;
     }
     if (subtitle) {
-      const p_subtitle = document.querySelector(".popup-header .subtitle");
+      const p_subtitle = of_q(".popup-header .subtitle");
       p_subtitle.innerText = subtitle;
     }
     if (body) {
-      const p_body = document.querySelector(".popup-body");
+      const p_body = of_q(".popup-body");
       p_body.innerText = body;
     }
 
@@ -773,7 +789,7 @@
    */
   const toggle_popup = function (show) {
 
-    const popup = document.getElementById("popup");
+    const popup = of_id("popup");
 
     // While revealing the pop-up, the 'opacity' property is modified a
     // little later than that of 'display' so that the transition effect can
@@ -815,10 +831,10 @@
 
     // Show the 'Yes' and 'No' buttons.
     if (message === "clear-session") {
-      const p_yes_btn = document.querySelector(".popup-footer .btn-yes");
+      const p_yes_btn = of_q(".popup-footer .btn-yes");
       p_yes_btn.setAttribute("data-action", "clear-session");
       p_yes_btn.classList.remove("hidden");
-      const p_no_btn = document.querySelector(".popup-footer .btn-no");
+      const p_no_btn = of_q(".popup-footer .btn-no");
       p_no_btn.classList.remove("hidden");
     }
 
@@ -847,14 +863,14 @@
   const add_event_listeners = function () {
     
     // Close the pop-up when its cross icon is clicked.
-    const popup_cross = document.querySelector("#popup .cross-icon");
+    const popup_cross = of_q("#popup .cross-icon");
     popup_cross.addEventListener("click", () => {
       toggle_popup(false);
       document.body.style.overflow = "";
     });
 
     // Close the pop-up when the 'No' button is clicked.
-    const p_no_btn = document.querySelector(".popup-footer .btn-no");
+    const p_no_btn = of_q(".popup-footer .btn-no");
     p_no_btn.addEventListener("click", () => {
       toggle_popup(false);
       document.body.style.overflow = "";
@@ -862,14 +878,14 @@
 
     // Show data removal warning when the cross icon in the sidebar is
     // clicked.
-    const sidebar_clear = document.querySelector("#sidebar .header-item.clear");
+    const sidebar_clear = of_q("#sidebar .header-item.clear");
     sidebar_clear.addEventListener("click", () => {
       pop_up("clear-session");
     });
 
     // Clear all event data from session when the 'Yes' button is clicked
     // in the data removal warning pop-up.
-    const p_yes_btn = document.querySelector(".popup-footer .btn-yes");
+    const p_yes_btn = of_q(".popup-footer .btn-yes");
     p_yes_btn.addEventListener("click", (e) => {
       const action = e.target.getAttribute("data-action");
       if (action === "clear-session") {
