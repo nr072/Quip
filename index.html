@@ -27,7 +27,9 @@
       font-size: 12px;
       padding: calc((100vh - var(--outermost-cont-height)) / 2) 0;
       --default-transition-dur-tf: .3s ease;
+      --green: #2cac2c;
       --outermost-cont-height: 750px;
+      --red: crimson;
       --sidebar-width: 280px;
       --theme-color-1: #4c4c4c;
       --theme-color-2: #777;
@@ -48,6 +50,20 @@
     .btn:hover {
       color: initial;
       border-color: var(--theme-color-1);
+    }
+
+    .btn-2 {
+      background: transparent;
+      border: none;
+      color: var(--theme-color-2);
+      cursor: pointer;
+      margin: 0 .5rem;
+      padding: .3rem 1rem;
+      transition: color var(--default-transition-dur-tf);
+    }
+
+    .btn-2:hover {
+      color: initial;
     }
 
     .hidden {
@@ -220,6 +236,36 @@
       color: unset;
     }
 
+    .popup-footer {
+      margin-top: 1rem;
+      text-align: right;
+    }
+
+    .popup-footer .btn-2 {
+      transition: color var(--default-transition-dur-tf),
+                  background var(--default-transition-dur-tf);
+    }
+
+    .popup-footer .btn-2:hover {
+      color: #fff;
+    }
+
+    .popup-footer .btn-yes {
+      color: var(--red);
+    }
+
+    .popup-footer .btn-yes:hover {
+      background: var(--red);
+    }
+
+    .popup-footer .btn-no {
+      color: var(--green);
+    }
+
+    .popup-footer .btn-no:hover {
+      background: var(--green);
+    }
+
     @media (min-width: 1401px) {
 
       .outermost-cont {
@@ -286,7 +332,8 @@
       </div>
       <div class="popup-body"></div>
       <div class="popup-footer">
-        <button class="btn btn-yes hidden">Yes</button>
+        <button class="btn-2 btn-yes hidden">Yes</button>
+        <button class="btn-2 btn-no hidden">No</button>
       </div>
     </div>
   </div>
@@ -718,22 +765,37 @@
   /*
    * Reveal/hide the pop-up.
    *
-   * While revealing the pop-up, the 'opacity' property is modified a little
-   * later than that of 'display' so that the transition effect can actually
-   * apply to the 'opacity'.
+   * When hiding it, the buttons in the pop-up footer are also hidden each
+   * time.
    *
    * @param  show  Boolean
    *
    */
   const toggle_popup = function (show) {
+
     const popup = document.getElementById("popup");
+
+    // While revealing the pop-up, the 'opacity' property is modified a
+    // little later than that of 'display' so that the transition effect can
+    // actually apply to the 'opacity'.
     if (show) {
       popup.classList.remove("hidden");
       setTimeout(() => { popup.classList.remove("transparent"); }, 100);
-    } else {
+    }
+
+    else {
+
+      // Hide the buttons in the pop-up footer so that they do not appear
+      // by default the next time the pop-up is displayed.
+      const footer_buttons = popup.querySelectorAll(".popup-footer .btn-2");
+      footer_buttons.forEach(btn => btn.classList.add("hidden"));
+
+      // Hide the pop-up itself;
       popup.classList.add("hidden", "transparent");
       set_popup_text("default");
+
     }
+
   }
 
 
@@ -751,10 +813,13 @@
 
     set_popup_text(message);
 
+    // Show the 'Yes' and 'No' buttons.
     if (message === "clear-session") {
       const p_yes_btn = document.querySelector(".popup-footer .btn-yes");
       p_yes_btn.setAttribute("data-action", "clear-session");
       p_yes_btn.classList.remove("hidden");
+      const p_no_btn = document.querySelector(".popup-footer .btn-no");
+      p_no_btn.classList.remove("hidden");
     }
 
     // Reveal the pop-up.
@@ -784,6 +849,13 @@
     // Close the pop-up when its cross icon is clicked.
     const popup_cross = document.querySelector("#popup .cross-icon");
     popup_cross.addEventListener("click", () => {
+      toggle_popup(false);
+      document.body.style.overflow = "";
+    });
+
+    // Close the pop-up when the 'No' button is clicked.
+    const p_no_btn = document.querySelector(".popup-footer .btn-no");
+    p_no_btn.addEventListener("click", () => {
       toggle_popup(false);
       document.body.style.overflow = "";
     });
