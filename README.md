@@ -1,7 +1,7 @@
 # Quip
 
 Quip (QUIck Planner) is basically a calendar of the current month where
-you can temporarily add noted to a day and see them in a sorted fashion.
+you can add notes to a day and see them in a sorted fashion.
 This makes planning the sequence of events a little easier (and nicer)
 than typing in a text editor or on a sticky note (physical or digital).
 
@@ -9,21 +9,11 @@ The interface is very minimal, though.
 Only a 100-character event title (the note name) can be added, but nothing more.
 No detail.
 
-And the event titles are saved in a JavaScript variable.
-So, they are highly temporary.
-A simple tab reload will reset the page to its default, blank state.
-Future plans include
-using either session storage and/or providing a feature to export data.
-
 _**Note:**
 The interface is not very mobile-friendly,
-but if behaves sufficiently well for screen widths above 600px._
+but it behaves sufficiently well for screen widths above 600px._
 
 ### Warning
-
-- The event data are highly temporary.
-A simple tab reload will
-remove everything and reset the page to its default, blank state.
 
 - This was created and tested using
 Mozilla Firefox version 79.0.
@@ -76,16 +66,23 @@ python3 -m http.server
 
 #### Using Quip
 
-1. Click on the 'Add' button for a date.  
-A prompt will appear, requiring you to write an event title.
+- Click on the 'Add' button for a date.
 
-2. Write an event title, and press the enter key or click on 'Okay'.  
-The event title will show up in the sidebar (on the right),
+  A prompt will appear, requiring you to write an event title.
+
+- Write an event title, and press the enter key or click on 'Okay'.
+
+  The event title will show up on the sidebar (on the right),
 preceded by the date.
+Every time a new entry is added,
+all entries on the sidebar are automatically sorted:
+based on date first, and then alphabetically,
 
-All titles in the sidebar are automatically sorted,
-based on date first and then alphabetically,
-every time a new entry is added.
+- To remove all added events, click on the cross icon on the sidebar.
+
+  A pop-up will appear, warning about the removal.
+If you click on the 'Yes' button,
+all data will be removed and the page will be reloaded.
 
 ### How It Works
 
@@ -103,18 +100,24 @@ So, you can just open the HTML file in as many tabs as you want
 to use multiple instances simultaneously,
 without having to worry about connection delay or anything like that.
 
+- Multiple instances simultaneously usable in different browser tabs.
+
+  Since all event data is saved in the session storage,
+the same page opened in different browser tabs will not share data.
+You can open the HTML file in as many tabs as you want
+to use multiple instances simultaneously.
+
 ### Downside
 
-- There is no no database, which means everything you do here is temporary.
-All it takes is an accidental page reload and everything is lost.
-(Though warnings do pop up when you press 'F5' or 'CTRL+R'.)
+- There is no database, everything is stored in the session storage.
+If a browser tab is closed, all data from that tab is lost.
 
 - The limit on event titles is 100 characters.
 A longer title may be entered in the prompt's input field,
 but everything after the limit will be truncated.
 
 - The sidebar is cleared and rewritten to every time a new event is added.
-This might affect performance, although  most likely negligibly.
+This might affect performance, although most likely negligibly.
 
 - Sidebar entries do not provide hyphenation.
 Long words are automatically broken, but _without_ any hyphen/dash character.
@@ -125,19 +128,12 @@ Long words are automatically broken, but _without_ any hyphen/dash character.
 
 ### Future Plan
 
-- Make data more persistent
-  - Use session storage
-  - Provide data export feature
+- Provide data export feature
 - Show only the events of a specific date upon user interaction
 
 ### Miscellaneous
 
-#### Is there a plan to make it less temporary?
+#### Is there a plan to add a database?
 
-Yes.
-The risk of an accidental reload is dangerously obvious.
-Session storage will most likely be used to solve this.
-Plus, a feature to export data to file is planned.
-
-A database will probably never be integrated.
+Most likely, no.
 This is a quick planning tool, and the developer would like it to stay that way.

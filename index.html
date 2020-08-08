@@ -285,6 +285,9 @@
         <div class="subtitle"></div>
       </div>
       <div class="popup-body"></div>
+      <div class="popup-footer">
+        <button class="btn btn-yes hidden">Yes</button>
+      </div>
     </div>
   </div>
 
@@ -322,17 +325,81 @@
    */
   const quip = function () {
 
-    const events = [];
+    // 2-dimensional array to store all event data.
+    // Each item of the outer array contains 2 items in turn:
+    //   1. the date, and
+    //   2. the event title.
+    let events = [];
+    
+    // The delimiter used to separate each event data when the entire 2D
+    // array is converted into a single string.
+    // Hopefully, no event title will contain this exact sequence of the
+    // characters. Some contingencies need to be added in the future for
+    // such a scenario.
+    const tostring_delim = "#$#";
+
+    // Convert the 2D array into a single string and then store it as session
+    // data.
+    // This conversion is done manually, rather than letting the storing
+    // process automatically take care of it, so that a custom delimiter can
+    // be used that is unlikely to be present in an event title. The automatic
+    // conversion would use commas as delimiters, which would, in case of a 2D
+    // array, make it harder to properly separate individual event data -
+    // especially if an event title contains commas.
+    const store_in_session = () => {
+      const string = events.join(tostring_delim);
+      sessionStorage.setItem("quip-data", string);
+    };
+
+    // Convert the single string (presumably full of all event data) to a
+    // 2D array.
+    const to_2d_array = (string) => {
+
+      // Return empty if no event created yet (fresh page load).
+      if (!string) {
+        return [];
+      }
+
+      // Split string using the hopefully unique delimiter, and then split
+      // each part again at the first comma.
+      const converted_events = string.split(tostring_delim);
+      const array_2d = converted_events.map(event => {
+        const parts = event.split(",");
+        event = [parts.shift(), parts.join(",")];
+        return event;
+      });
+
+      return array_2d;
+
+    };
 
     return {
 
-      get_events: function () {
+      /*
+       * Get all event data as a 2D array.
+       * Get the data stored in session as a single string, convert it to a
+       * 2D array, store it in the JS variable and then return.
+       *
+       * @returns  Array
+       *
+       */
+      get_events: () => {
+        const string = sessionStorage.getItem("quip-data");
+        events = to_2d_array(string);
         return events;
       },
 
-      add_event: function (date, text) {
-        events.push([date, text]);
+      /*
+       * Add a newly-created event.
+       *
+       * @param  date  String
+       * @param  text  String
+       *
+       */
+      add_event: (date, title) => {
+        events.push([date, title]);
         events.sort();
+        store_in_session();
       }
 
     };
@@ -622,6 +689,9 @@
     if (message === "coming-soon") {
       title = "Sorry!";
       body = "This feature has not been implemented yet.";
+    } else if (message === "clear-session") {
+      title = "Warning!";
+      body = "All event data will be removed and the page will reload. There is no way to get the data back. Do you wish to continue?";
     } else if (message === "default") {
       title = "Weird, huh?";
       body = "This is a pop-up.";
@@ -679,12 +749,28 @@
     // Stop page scrolling beneath the pop-up.
     document.body.style.overflow = "hidden";
 
-    set_popup_text("coming-soon");
+    set_popup_text(message);
+
+    if (message === "clear-session") {
+      const p_yes_btn = document.querySelector(".popup-footer .btn-yes");
+      p_yes_btn.setAttribute("data-action", "clear-session");
+      p_yes_btn.classList.remove("hidden");
+    }
 
     // Reveal the pop-up.
     toggle_popup(true);
 
   }
+
+
+
+  /*
+   *
+   *
+   */
+  const clear_session = () => {
+    sessionStorage.removeItem("quip-data");
+  };
 
 
 
@@ -702,12 +788,21 @@
       document.body.style.overflow = "";
     });
 
-    // Warn user about data reset if the 'F5' key or 'CTRL+R' are pressed.
-    window.addEventListener("keydown", (e) => {
-      if (e.keyCode === 116 || (e.ctrlKey && e.keyCode === 82)) {
-        if (confirm("All event data will be lost. Continue?")) {
-          location.reload();
-        }
+    // Show data removal warning when the cross icon in the sidebar is
+    // clicked.
+    const sidebar_clear = document.querySelector("#sidebar .header-item.clear");
+    sidebar_clear.addEventListener("click", () => {
+      pop_up("clear-session");
+    });
+
+    // Clear all event data from session when the 'Yes' button is clicked
+    // in the data removal warning pop-up.
+    const p_yes_btn = document.querySelector(".popup-footer .btn-yes");
+    p_yes_btn.addEventListener("click", (e) => {
+      const action = e.target.getAttribute("data-action");
+      if (action === "clear-session") {
+        clear_session();
+        window.location.reload();
       }
     });
 
