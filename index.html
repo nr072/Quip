@@ -35,6 +35,10 @@
       --theme-color-2: #777;
     }
 
+    body.noscript {
+      overflow: hidden;
+    }
+
     .btn {
       background: transparent;
       border: 1px solid transparent;
@@ -334,16 +338,16 @@
 
 
 
-<body>
+<body class="noscript">
 
-  <div id="popup" class="popup-cont hidden transparent">
+  <div id="popup" class="popup-cont noscript">
     <div class="popup">
       <span class="cross-icon" title="Close pop-up">&times;</span>
       <div class="popup-header">
-        <div class="title"></div>
+        <div class="title">JavaScript required!</div>
         <div class="subtitle"></div>
       </div>
-      <div class="popup-body"></div>
+      <div class="popup-body">It seems that JavaScript is turned off for this page. Kindly enable it to use this page, since Quip depends heavily on JavaScript.</div>
       <div class="popup-footer">
         <button class="btn-2 btn-yes hidden">Yes</button>
         <button class="btn-2 btn-no hidden">No</button>
@@ -375,6 +379,36 @@
 <script type="text/javascript">
 
   "use strict";
+
+  /*
+   * Hide the no-script message.
+   *
+   * By default, the page shows the pop-up with a message to turn JavaScript
+   * on. This, instead of using <noscript>, has been done to make use of the
+   * pop-up to show the message. In the current case, as soon as the script
+   * starts loading, this IIFE runs, removing all no-script-related code:
+   * the pop-up is hidden and its content cleared for future use.
+   *
+   */
+  (() => {
+
+    // Make the document body scrollable (if needed).
+    document.body.classList.remove("noscript");
+
+    // Hide the pop-up by default.
+    const ns_popup = document.querySelector("#popup.noscript");
+    ns_popup.classList.remove("noscript");
+    ns_popup.classList.add("hidden", "transparent");
+
+    // Clear pop-up title and body.
+    const ns_p_title = ns_popup.querySelector(".popup-header .title");
+    ns_p_title.innerText = "";
+    const ns_p_body = ns_popup.querySelector(".popup-body");
+    ns_p_body.innerText = "";
+
+  })();
+
+
 
   /*
    * Function to store event data in, and to provide event-related methods
