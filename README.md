@@ -93,6 +93,12 @@ replaced by the newly sorted ones.
 
 ### Upside
 
+- No need for internet a connection.
+
+  Since this is simply an HTML page,
+just opening in the browser is all that is needed.
+Quip does not connect to any outside server.
+
 - Good for quick planning.
 
   There is no database.
