@@ -211,7 +211,7 @@
     }
 
     .popup-header {
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     .popup-header .title {
@@ -235,6 +235,10 @@
 
     .popup .cross-icon:hover {
       color: unset;
+    }
+
+    .popup-body p {
+      margin-bottom: .5rem;
     }
 
     .popup-footer {
@@ -763,7 +767,9 @@
       body = "This feature has not been implemented yet.";
     } else if (message === "clear-session") {
       title = "Warning!";
-      body = "All event data will be removed and the page will reload. There is no way to get the data back. Do you wish to continue?";
+      body = "<p>All event data will be removed and the page will reload." +
+        " There is no way to get the data back.</p>" +
+        "<p>Do you wish to continue?</p>";
     } else if (message === "default") {
       title = "Weird, huh?";
       body = "This is a pop-up.";
@@ -780,7 +786,7 @@
     }
     if (body) {
       const p_body = of_q(".popup-body");
-      p_body.innerText = body;
+      p_body.innerHTML = body;
     }
 
   };
